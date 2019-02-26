@@ -1,0 +1,88 @@
+
+const string ATOM = "Y-m-d\TH:i:sP" ;			2005-08-15T15:52:01+00:00
+const string COOKIE = "l, d-M-y H:i:s T" ; 	 	Monday, 15-Aug-05 15:52:01 UTC
+const string ISO8601 = "Y-m-d\TH:i:sO" ; 		2005-08-15T15:52:01+0000
+const string RFC822 = "D, d M y H:i:s O" ;		Mon, 15 Aug 05 15:52:01 +0000
+const string RFC850 = "l, d-M-y H:i:s T" ;		Monday, 15-Aug-05 15:52:01 UTC
+const string RFC1036 = "D, d M y H:i:s O" ;		Mon, 15 Aug 05 15:52:01 +0000
+const string RFC1123 = "D, d M Y H:i:s O" ;		Mon, 15 Aug 2005 15:52:01 +0000
+const string RFC2822 = "D, d M Y H:i:s O" ;		Mon, 15 Aug 2005 15:52:01 +0000
+const string RFC3339 = "Y-m-d\TH:i:sP" ;		2005-08-15T15:52:01+00:00
+const string RSS = "D, d M Y H:i:s O" ;			Mon, 15 Aug 2005 15:52:01 +0000
+const string W3C = "Y-m-d\TH:i:sP" ;			2005-08-15T15:52:01+00:00
+
+
+
+
+######### RFC822 ########
+
+date-time   =  [ day "," ] date time        ; dd mm yy
+                                            ;  hh:mm:ss zzz
+
+day         =  "Mon"  / "Tue" /  "Wed"  / "Thu"
+            /  "Fri"  / "Sat" /  "Sun"
+
+date        =  1*2DIGIT month 2DIGIT        ; day month year
+                                            ;  e.g. 20 Jun 82
+
+month       =  "Jan"  /  "Feb" /  "Mar"  /  "Apr"
+            /  "May"  /  "Jun" /  "Jul"  /  "Aug"
+            /  "Sep"  /  "Oct" /  "Nov"  /  "Dec"
+
+time        =  hour zone                    ; ANSI and Military
+
+hour        =  2DIGIT ":" 2DIGIT [":" 2DIGIT]
+                                            ; 00:00:00 - 23:59:59
+
+zone        =  "UT"  / "GMT"                ; Universal Time
+                                            ; North American : UT
+            /  "EST" / "EDT"                ;  Eastern:  - 5/ - 4
+            /  "CST" / "CDT"                ;  Central:  - 6/ - 5
+            /  "MST" / "MDT"                ;  Mountain: - 7/ - 6
+            /  "PST" / "PDT"                ;  Pacific:  - 8/ - 7
+            /  1ALPHA                       ; Military: Z = UT;
+                                            ;  A:-1; (J not used)
+                                            ;  M:-12; N:+1; Y:+12
+            / ( ("+" / "-") 4DIGIT )        ; Local differential
+                                            ;  hours+min. (HHMM)
+
+
+
+
+
+
+GENERATE RFC822
+
+
+<xsl:value-of select="concat(date:day-abbreviation(), ', ',
+  format-number(date:day-in-month(), '00'), ' ',
+  date:month-abbreviation(), ' ', date:year(), ' ',
+  format-number(date:hour-in-day(), '00'), ':',
+  format-number(date:minute-in-hour(), '00'), ':',
+  format-number(date:second-in-minute(), '00'), ' GMT')"/>
+
+
+
+
+<!-- Convert from ISO 8601 dateformat to rfc 822 dateformat (XSLT 2.0) -->
+
+  <xsl:template name="ISO8601-to-rfc822">
+          <!-- Input:  2009-01-25T23:20:30.45+01:00 -->
+          <!-- Output: Sun, 25 Jan 2009 20:30:45 +0100 GMT -->
+          <xsl:param name="date"/>
+          <xsl:value-of select="format-dateTime($date, '[F, 3-3], [D, 2-2] [MNn, 3-3] [Y] [h01]:[m01]:[s01] [z]')"/>
+  </xsl:template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
